@@ -52,12 +52,8 @@ function replaceLiveFeedWithImage(img) {
     webcamContainer.appendChild(img); // Append the captured image
 }
 
-restartButton.addEventListener('click', async () => {
-    if (isCaptured) {
-        webcamContainer.innerHTML = ''; // Clear the webcam container
-        webcamContainer.appendChild(webcamElement); // Append the live webcam feed
-        isCaptured = false;
-    }
+restartButton.addEventListener('click', () => {
+    window.location.reload(); // Reload the webpage
 });
 
 function displayPredictions(predictions) {
