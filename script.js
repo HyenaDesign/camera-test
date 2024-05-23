@@ -3,18 +3,9 @@ const captureButton = document.getElementById('capture-button');
 const predictionElement = document.getElementById('prediction');
 const restartButton = document.getElementById('restart-button');
 
-// Specify constraints to use the back-facing camera
-const constraints = {
-    video: {
-        facingMode: { exact: 'environment' }, // 'environment' represents the back-facing camera
-        width: { min: 1280, ideal: 1920, max: 2560 },
-        height: { min: 720, ideal: 1080, max: 1440 }
-    }
-};
-
 async function init() {
     try {
-        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: 'environment' } } });
         const videoTrack = stream.getVideoTracks()[0];
         const imageCapture = new ImageCapture(videoTrack);
         captureButton.addEventListener('click', async () => {
