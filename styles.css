@@ -1,0 +1,44 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f0f0f0;
+}
+
+h1 {
+    color: #333;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.webcam-container {
+    position: relative;
+}
+
+#capture-button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#capture-button:hover {
+    background-color: #0056b3;
+}
+
+#canvas {
+    margin-top: 20px;
+}
+
+#prediction {
+    margin-top: 20px;
+    font-size: 1.2em;
+    color: #333;
+}
