@@ -7,8 +7,9 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Image Classification with MobileNet</h1>
+    <div class="content">
     <div class="container">
+        <h1>IMAGE Classification</h1>
         <div class="webcam-container" id="webcam-container">
             <video id="webcam" autoplay playsinline width="400" height="300"></video>
             <button id="capture-button">Capture Image</button>
@@ -17,6 +18,7 @@
         <div id="prediction"></div>
         <button id="restart-button">Restart</button>
     </div>
+</div>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
     <script src="https://cdn.jsdelivr.net/npm/webcam-easy/dist/webcam-easy.min.js"></script>

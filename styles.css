@@ -1,11 +1,23 @@
 body {
-    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url('https://images.unsplash.com/photo-1584968203528-00005749189c?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-size: cover;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    text-transform: uppercase;
     text-align: center;
-    background-color: #f0f0f0;
 }
 
 h1 {
     color: #333;
+}
+
+.content {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    max-width: 1300px;
 }
 
 .container {
@@ -13,6 +25,14 @@ h1 {
     flex-direction: column;
     align-items: center;
     margin-top: 20px;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    background: rgba(213, 223, 224, 0.20);
+    box-shadow: 0px 0px 30px 0px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(12.5px);
+    border-radius: 10px;
+    padding: 5%; /* Adjust padding */
 }
 
 .webcam-container {
@@ -41,4 +61,14 @@ h1 {
     margin-top: 20px;
     font-size: 1.2em;
     color: #333;
+}
+
+#restart-button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
