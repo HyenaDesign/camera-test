@@ -1,3 +1,4 @@
+const videoElement = document.getElementById('video');
 const canvasElement = document.getElementById('canvas');
 const captureButton = document.getElementById('capture-button');
 const predictionElement = document.getElementById('prediction');
@@ -6,24 +7,28 @@ const restartButton = document.getElementById('restart-button');
 async function init() {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: 'environment' } } });
-        const videoTrack = stream.getVideoTracks()[0];
-        const imageCapture = new ImageCapture(videoTrack);
-        captureButton.addEventListener('click', async () => {
-            const blob = await imageCapture.takePhoto();
-            const img = new Image();
-            img.src = URL.createObjectURL(blob);
-            img.onload = async () => {
-                const model = await mobilenet.load();
-                const predictions = await model.classify(img);
-                displayPredictions(predictions);
-            };
-        });
+        videoElement.srcObject = stream;
+        videoElement.play();
         console.log('Camera started');
     } catch (error) {
         console.error('Error accessing camera:', error);
         handleCameraError(error);
     }
 }
+
+captureButton.addEventListener('click', () => {
+    const context = canvasElement.getContext('2d');
+    context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+    const picture = canvasElement.toDataURL('image/jpeg');
+    const img = new Image();
+    img.src = picture;
+
+    img.onload = async () => {
+        const model = await mobilenet.load();
+        const predictions = await model.classify(img);
+        displayPredictions(predictions);
+    };
+});
 
 function handleCameraError(error) {
     if (error.name === 'NotAllowedError') {
