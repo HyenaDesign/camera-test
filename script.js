@@ -4,18 +4,21 @@ const captureButton = document.getElementById('capture-button');
 const predictionElement = document.getElementById('prediction');
 const restartButton = document.getElementById('restart-button');
 const webcam = new Webcam(webcamElement, 'user', canvasElement);
+let inceptionModel;
 
 async function init() {
     try {
         await webcam.start();
         console.log('Webcam started');
+        inceptionModel = await tf.loadGraphModel('https://tfhub.dev/google/tfjs-model/inception_v3/1/default/1', { fromTFHub: true });
+        console.log('Inception model loaded');
     } catch (error) {
-        console.error('Error accessing webcam:', error);
-        handleWebcamError(error);
+        console.error('Error accessing webcam or loading model:', error);
+        handleInitError(error);
     }
 }
 
-function handleWebcamError(error) {
+function handleInitError(error) {
     if (error.name === 'NotAllowedError') {
         alert('Camera access was denied. Please allow access to the camera.');
     } else if (error.name === 'NotFoundError') {
@@ -33,11 +36,21 @@ captureButton.addEventListener('click', async () => {
     img.src = picture;
 
     img.onload = async () => {
-        const model = await mobilenet.load();
-        const predictions = await model.classify(img);
+        const predictions = await predictWithInception(img);
         displayPredictions(predictions);
     };
 });
+
+async function predictWithInception(image) {
+    const tensor = tf.browser.fromPixels(image).resizeNearestNeighbor([299, 299]).toFloat().expandDims();
+
+
+    const predictions = await inceptionModel.predict(tensor).data();
+
+    return Array.from(predictions).map((probability, index) => {
+        return { className: index.toString(), probability };
+    });
+}
 
 restartButton.addEventListener('click', () => {
     window.location.reload(); // Reload the webpage
