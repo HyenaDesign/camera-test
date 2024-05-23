@@ -3,7 +3,13 @@ const canvasElement = document.getElementById('canvas');
 const captureButton = document.getElementById('capture-button');
 const predictionElement = document.getElementById('prediction');
 const restartButton = document.getElementById('restart-button');
-const webcam = new Webcam(webcamElement, 'user', canvasElement);
+
+// Specify constraints to use the back-facing camera
+const constraints = {
+    video: { facingMode: { exact: 'environment' } } // 'environment' represents the back-facing camera
+};
+
+const webcam = new Webcam(webcamElement, constraints, canvasElement);
 
 async function init() {
     try {
