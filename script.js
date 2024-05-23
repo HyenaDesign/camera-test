@@ -1,4 +1,3 @@
-const webcamElement = document.getElementById('webcam');
 const canvasElement = document.getElementById('canvas');
 const captureButton = document.getElementById('capture-button');
 const predictionElement = document.getElementById('prediction');
@@ -6,44 +5,48 @@ const restartButton = document.getElementById('restart-button');
 
 // Specify constraints to use the back-facing camera
 const constraints = {
-    video: { facingMode: { exact: 'environment' } } // 'environment' represents the back-facing camera
+    video: {
+        facingMode: { exact: 'environment' }, // 'environment' represents the back-facing camera
+        width: { min: 1280, ideal: 1920, max: 2560 },
+        height: { min: 720, ideal: 1080, max: 1440 }
+    }
 };
-
-const webcam = new Webcam(webcamElement, constraints, canvasElement);
 
 async function init() {
     try {
-        await webcam.start();
-        console.log('Webcam started');
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        const videoTrack = stream.getVideoTracks()[0];
+        const imageCapture = new ImageCapture(videoTrack);
+        captureButton.addEventListener('click', async () => {
+            const blob = await imageCapture.takePhoto();
+            const img = new Image();
+            img.src = URL.createObjectURL(blob);
+            img.onload = async () => {
+                const model = await mobilenet.load();
+                const predictions = await model.classify(img);
+                displayPredictions(predictions);
+            };
+        });
+        console.log('Camera started');
     } catch (error) {
-        console.error('Error accessing webcam:', error);
-        handleWebcamError(error);
+        console.error('Error accessing camera:', error);
+        handleCameraError(error);
     }
 }
 
-function handleWebcamError(error) {
+function handleCameraError(error) {
     if (error.name === 'NotAllowedError') {
         alert('Camera access was denied. Please allow access to the camera.');
     } else if (error.name === 'NotFoundError') {
         alert('No camera was found. Please ensure your camera is connected.');
     } else if (error.name === 'NotReadableError') {
         alert('The camera is already in use by another application.');
+    } else if (error.name === 'OverconstrainedError' || error.name === 'ConstraintNotSatisfiedError') {
+        alert('The requested constraints could not be satisfied by any available camera.');
     } else {
         alert('An unknown error occurred while trying to access the camera.');
     }
 }
-
-captureButton.addEventListener('click', async () => {
-    const picture = webcam.snap();
-    const img = new Image();
-    img.src = picture;
-
-    img.onload = async () => {
-        const model = await mobilenet.load();
-        const predictions = await model.classify(img);
-        displayPredictions(predictions);
-    };
-});
 
 restartButton.addEventListener('click', () => {
     window.location.reload(); // Reload the webpage
