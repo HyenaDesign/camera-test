@@ -4,21 +4,18 @@ const captureButton = document.getElementById('capture-button');
 const predictionElement = document.getElementById('prediction');
 const restartButton = document.getElementById('restart-button');
 const webcam = new Webcam(webcamElement, 'user', canvasElement);
-let inceptionModel;
 
 async function init() {
     try {
         await webcam.start();
         console.log('Webcam started');
-        inceptionModel = await tf.loadGraphModel('https://tfhub.dev/google/tfjs-model/inception_v3/1/default/1', { fromTFHub: true });
-        console.log('Inception model loaded');
     } catch (error) {
-        console.error('Error accessing webcam or loading model:', error);
-        handleInitError(error);
+        console.error('Error accessing webcam:', error);
+        handleWebcamError(error);
     }
 }
 
-function handleInitError(error) {
+function handleWebcamError(error) {
     if (error.name === 'NotAllowedError') {
         alert('Camera access was denied. Please allow access to the camera.');
     } else if (error.name === 'NotFoundError') {
@@ -36,40 +33,23 @@ captureButton.addEventListener('click', async () => {
     img.src = picture;
 
     img.onload = async () => {
-        const predictions = await predictWithInception(img);
+        const model = await mobilenet.load();
+        const predictions = await model.classify(img);
         displayPredictions(predictions);
     };
 });
-
-async function predictWithInception(image) {
-    const tensor = tf.browser.fromPixels(image).resizeNearestNeighbor([299, 299]).toFloat().expandDims();
-
-
-    const predictions = await inceptionModel.predict(tensor);
-
-    return Array.from(predictions.dataSync());
-}
 
 restartButton.addEventListener('click', () => {
     window.location.reload(); // Reload the webpage
 });
 
 function displayPredictions(predictions) {
-    const top5 = getTopPredictions(predictions, 5); // Get top 5 predictions
     predictionElement.innerHTML = '';
-    top5.forEach((probability, index) => {
+    predictions.forEach(prediction => {
         const p = document.createElement('p');
-        p.innerText = `Class ${index}: ${probability.toFixed(4)}`;
+        p.innerText = `${prediction.className}: ${prediction.probability.toFixed(4)}`;
         predictionElement.appendChild(p);
     });
-}
-
-function getTopPredictions(predictions, numTopPredictions) {
-    const values = Array.from(predictions);
-    const indices = values.map((value, index) => index);
-    indices.sort((indexA, indexB) => values[indexB] - values[indexA]);
-    const topIndices = indices.slice(0, numTopPredictions);
-    return topIndices.map(index => values[index]);
 }
 
 init();
