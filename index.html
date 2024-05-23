@@ -9,12 +9,13 @@
 <body>
     <h1>Image Classification with MobileNet</h1>
     <div class="container">
-        <div class="webcam-container">
+        <div class="webcam-container" id="webcam-container">
             <video id="webcam" autoplay playsinline width="400" height="300"></video>
             <button id="capture-button">Capture Image</button>
         </div>
         <canvas id="canvas" width="400" height="300"></canvas>
         <div id="prediction"></div>
+        <button id="restart-button">Restart</button>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
