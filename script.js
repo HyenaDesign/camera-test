@@ -45,11 +45,9 @@ async function predictWithInception(image) {
     const tensor = tf.browser.fromPixels(image).resizeNearestNeighbor([299, 299]).toFloat().expandDims();
 
 
-    const predictions = await inceptionModel.predict(tensor).data();
+    const predictions = await inceptionModel.predict(tensor);
 
-    return Array.from(predictions).map((probability, index) => {
-        return { className: index.toString(), probability };
-    });
+    return Array.from(predictions.dataSync());
 }
 
 restartButton.addEventListener('click', () => {
@@ -57,12 +55,21 @@ restartButton.addEventListener('click', () => {
 });
 
 function displayPredictions(predictions) {
+    const top5 = getTopPredictions(predictions, 5); // Get top 5 predictions
     predictionElement.innerHTML = '';
-    predictions.forEach(prediction => {
+    top5.forEach((probability, index) => {
         const p = document.createElement('p');
-        p.innerText = `${prediction.className}: ${prediction.probability.toFixed(4)}`;
+        p.innerText = `Class ${index}: ${probability.toFixed(4)}`;
         predictionElement.appendChild(p);
     });
+}
+
+function getTopPredictions(predictions, numTopPredictions) {
+    const values = Array.from(predictions);
+    const indices = values.map((value, index) => index);
+    indices.sort((indexA, indexB) => values[indexB] - values[indexA]);
+    const topIndices = indices.slice(0, numTopPredictions);
+    return topIndices.map(index => values[index]);
 }
 
 init();
