@@ -32,7 +32,7 @@ h1 {
     box-shadow: 0px 0px 30px 0px rgba(0, 0, 0, 0.25);
     backdrop-filter: blur(12.5px);
     border-radius: 10px;
-    padding: 5%; /* Adjust padding */
+    padding: 5%;
 }
 
 .webcam-container {

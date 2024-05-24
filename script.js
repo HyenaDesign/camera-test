@@ -6,7 +6,6 @@ const restartButton = document.getElementById('restart-button');
 
 if (!videoElement || !canvasElement || !captureButton || !predictionElement || !restartButton) {
     console.error("One or more required elements are missing.");
-    // Handle this error, perhaps by displaying a message to the user
 }
 
 async function init() {
@@ -50,7 +49,7 @@ function handleCameraError(error) {
 }
 
 restartButton.addEventListener('click', () => {
-    window.location.reload(); // Reload the webpage
+    window.location.reload();
 });
 
 function displayPredictions(predictions) {
