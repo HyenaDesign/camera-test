@@ -37,6 +37,11 @@ h1 {
 
 .webcam-container {
     position: relative;
+    border-radius: 10px;
+}
+
+video {
+    border-radius: 10px;
 }
 
 #capture-button {
@@ -55,6 +60,7 @@ h1 {
 
 #canvas {
     margin-top: 20px;
+    border-radius: 10px;
 }
 
 #prediction {
